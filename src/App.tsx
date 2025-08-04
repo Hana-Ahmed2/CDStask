@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   TextField,
@@ -9,15 +9,38 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { login } from './auth';
+import { login, type JwtToken, updateToken } from './auth';
 import { useNavigate } from 'react-router-dom';
+
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const navigate = useNavigate()
+  const [token, setToken] = useState<JwtToken | null>(null);
+  const tokenRefreshTimeout = useRef<number | null>(null);
+  const navigate = useNavigate();
+
+  const scheduleTokenRefresh = (token: JwtToken) => {
+    if (tokenRefreshTimeout.current) {
+      clearTimeout(tokenRefreshTimeout.current);   // 3ashan mayhslsh overlapping refreshes 
+    }
+
+    const refreshDelay = (token.expiresIn - 60) * 1000;  //bn refresh before the expire b 1 min (60sec)
+    console.log(' Scheduling token refresh in', refreshDelay / 1000, 'seconds');
+
+    tokenRefreshTimeout.current = setTimeout(async () => {
+      try {
+        console.log('Triggering token refresh...');
+        const newToken = await updateToken(token);
+        console.log(' Token refreshed:', newToken);
+        setToken(newToken);
+        scheduleTokenRefresh(newToken);
+      } catch (err) {
+        console.error('Failed to refresh token:', err);
+      }
+    }, refreshDelay);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,9 +50,12 @@ function App() {
 
     try {
       const result = await login({ username, password });
-      setToken(result.token);
-       navigate('/Nextpage');
+      console.log('Logged in:', result);
+      setToken(result);
+      scheduleTokenRefresh(result);
+      navigate('/Nextpage');
     } catch (err) {
+      console.error(' Login failed:', err);
       setError((err as Error).message);
     } finally {
       setLoading(false);
@@ -45,6 +71,7 @@ function App() {
         alignItems: 'center',
         justifyContent: 'center',
         p: 2,
+        overflow: 'hidden',
       }}
     >
       <Paper
