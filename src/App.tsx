@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -13,25 +14,46 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, Person, Lock } from '@mui/icons-material';
 import { login, type JwtToken, updateToken } from './auth';
-import { useNavigate } from 'react-router-dom';
+import Nextpage from './NextPage';
 import './App.css';
 
-function App() {
+function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<JwtToken | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const tokenRefreshTimeout = useRef<number | null>(null);
+  const [showPassword, setShowPassword] = useState(false); // 3ashan nekhalih yeshoof el password
+  const tokenRefreshTimeout = useRef<number | null>(null); // 3ashan negdad el token
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      try {
+        const parsedToken: JwtToken = JSON.parse(storedToken);
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (parsedToken.expiresIn > currentTime) {
+          setToken(parsedToken);
+          scheduleTokenRefresh(parsedToken);
+          navigate('/Nextpage'); 
+        } else {
+          localStorage.removeItem('authToken'); 
+        }
+      } catch (error) {
+        console.error('Error parsing stored token:', error);
+        localStorage.removeItem('authToken');
+      }
+    }
+  }, [navigate]);
+
+  // function 3ashan tegdad el token abl ma ykheles
   const scheduleTokenRefresh = (token: JwtToken) => {
     if (tokenRefreshTimeout.current) {
       clearTimeout(tokenRefreshTimeout.current);
     }
 
-    const refreshDelay = (token.expiresIn - 60) * 1000;
+    const refreshDelay = (token.expiresIn - 60) * 1000; 
     console.log('Scheduling token refresh in', refreshDelay / 1000, 'seconds');
 
     tokenRefreshTimeout.current = setTimeout(async () => {
@@ -40,9 +62,12 @@ function App() {
         const newToken = await updateToken(token);
         console.log('Token refreshed:', newToken);
         setToken(newToken);
+        localStorage.setItem('authToken', JSON.stringify(newToken));
         scheduleTokenRefresh(newToken);
       } catch (err) {
         console.error('Failed to refresh token:', err);
+        localStorage.removeItem('authToken');
+        setToken(null);
       }
     }, refreshDelay);
   };
@@ -57,6 +82,7 @@ function App() {
       const result = await login({ username, password });
       console.log('Logged in:', result);
       setToken(result);
+      localStorage.setItem('authToken', JSON.stringify(result)); 
       scheduleTokenRefresh(result);
       navigate('/Nextpage');
     } catch (err) {
@@ -82,6 +108,7 @@ function App() {
         p: 1.5,
         position: 'relative',
         overflow: 'hidden',
+        // de 3ashan na3mel overlay 3ala el background
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -94,6 +121,7 @@ function App() {
         }
       }}
     >
+      {/* circles fel background 3ashan design */}
       <Box
         sx={{
           position: 'absolute',
@@ -119,6 +147,7 @@ function App() {
         }}
       />
 
+      {/* el container el abyad elly feeh el form */}
       <Paper
         elevation={24}
         sx={{
@@ -127,7 +156,7 @@ function App() {
           width: '100%',
           borderRadius: 4,
           bgcolor: 'rgba(255,255,255,0.95)',
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(20px)', // glass effect
           border: '1px solid rgba(255, 255, 255, 0.3)',
           boxShadow: '0 25px 50px -12px rgba(30, 58, 138, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)',
           position: 'relative',
@@ -178,7 +207,7 @@ function App() {
               background: 'linear-gradient(135deg, #1e3a8a, #7c3aed, #be185d)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              WebkitTextFillColor: 'transparent', 
               mb: 0.5,
               letterSpacing: '0.5px',
             }}
@@ -196,6 +225,7 @@ function App() {
           </Typography>
         </Box>
 
+        {/* el form nafso */}
         <Box
           component="form"
           onSubmit={handleLogin}
@@ -205,6 +235,7 @@ function App() {
             gap: 2,
           }}
         >
+          {/* username field */}
           <TextField
             variant="outlined"
             fullWidth
@@ -221,13 +252,16 @@ function App() {
               sx: {
                 borderRadius: 2,
                 bgcolor: 'rgba(248, 250, 252, 0.8)',
+                // styling el border lama ykon normal
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'rgba(124, 58, 237, 0.3)',
                   borderWidth: 2,
                 },
+                // lama yehoot el mouse 3aleeh
                 '&:hover .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'rgba(124, 58, 237, 0.5)',
                 },
+                // lama yclick gowah
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                   borderColor: '#7c3aed',
                   borderWidth: 2,
@@ -250,6 +284,7 @@ function App() {
             }}
           />
 
+          {/* password field */}
           <TextField
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
@@ -264,6 +299,7 @@ function App() {
                   <Lock sx={{ color: '#7c3aed' }} />
                 </InputAdornment>
               ),
+              // law feeh password, hatezhar el eye button
               endAdornment: password.length > 0 ? (
                 <InputAdornment position="end">
                   <IconButton
@@ -291,8 +327,8 @@ function App() {
                 '&:hover .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'rgba(124, 58, 237, 0.5)',
                 },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { // Focused state (Mui focused : ma3naha clicked inside the text field)
-                  borderColor: '#7c3aed',      // el muioulined di bt target el outline border
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#7c3aed',
                   borderWidth: 2,
                 },
                 '& input': {
@@ -360,7 +396,7 @@ function App() {
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               '&:hover': {
                 background: 'linear-gradient(135deg, #1e40af 0%, #8b5cf6 50%, #c2185b 100%)',
-                transform: 'translateY(-2px)',
+                transform: 'translateY(-2px)', 
                 boxShadow: '0 15px 35px rgba(124, 58, 237, 0.5)',
               },
               '&:active': {
@@ -386,6 +422,7 @@ function App() {
           </Button>
 
           <Box sx={{ mt: 1.5 }}>
+            {/* forgot password link */}
             <Box sx={{ textAlign: 'center', mb: 1.5 }}>
               <Link
                 component="button"
@@ -403,6 +440,7 @@ function App() {
                     color: '#be185d',
                     textDecoration: 'underline',
                   },
+                  // underline animation
                   '&::after': {
                     content: '""',
                     position: 'absolute',
@@ -422,6 +460,7 @@ function App() {
               </Link>
             </Box>
 
+            {/* el khat elly fe nos el text */}
             <Box
               sx={{
                 position: 'relative',
@@ -458,6 +497,7 @@ function App() {
               </Typography>
             </Box>
  
+            {/* sign up section */}
             <Box
               sx={{
                 textAlign: 'center',
@@ -468,6 +508,7 @@ function App() {
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'all 0.3s ease',
+                // shine effect
                 '&::before': {
                   content: '""',
                   position: 'absolute',
@@ -515,6 +556,7 @@ function App() {
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
                   overflow: 'hidden',
+                  // hover overlay
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -560,6 +602,15 @@ function App() {
         </Box>
       </Paper>
     </Box>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/Nextpage" element={<Nextpage />} />
+    </Routes>
   );
 }
 

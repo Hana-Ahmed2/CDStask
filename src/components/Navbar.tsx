@@ -29,9 +29,16 @@ import {
   Business,
   Support,
   Info,
+  DarkMode,
+  LightMode,
 } from '@mui/icons-material';
 
-const Navbar = () => {
+interface NavbarProps {
+  darkMode?: boolean;
+  toggleDarkMode?: () => void;
+}
+
+const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
@@ -50,7 +57,7 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { text: 'Home', icon: <Home />, path: '/home' },
+    { text: 'Home', icon: <Home />, path: '/NextPage.tsx' },
     { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
     { text: 'Services', icon: <Business />, path: '/services' },
     { text: 'About', icon: <Info />, path: '/about' },
@@ -210,6 +217,29 @@ const Navbar = () => {
             </Box>
           )}
 
+          {/* Dark Mode Toggle Button */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+            <IconButton
+              onClick={toggleDarkMode}
+              sx={{
+                color: 'white',
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '50%',
+                width: 44,
+                height: 44,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  transform: 'scale(1.05) rotate(180deg)',
+                },
+              }}
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {darkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
+          </Box>
+
           {/* Profile Menu */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
@@ -301,7 +331,7 @@ const Navbar = () => {
               color: '#1e3a8a',
             }}
           >
-            John Doe
+            admin
           </Typography>
         </Box>
         
