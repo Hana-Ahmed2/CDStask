@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -43,6 +44,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -106,6 +108,17 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
       </List>
     </Box>
   );
+
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem('authToken');
+    
+    // Close the menu
+    handleProfileMenuClose();
+    
+    // Redirect to login page
+    navigate('/', { replace: true });
+  };
 
   return (
     <>
@@ -364,7 +377,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
         <Divider sx={{ backgroundColor: 'rgba(124, 58, 237, 0.1)' }} />
         
         <MenuItem
-          onClick={handleProfileMenuClose}
+          onClick={handleLogout}  // Change this line
           sx={{
             py: 1.5,
             '&:hover': {

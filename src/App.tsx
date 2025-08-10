@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -14,10 +14,9 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, Person, Lock } from '@mui/icons-material';
 import { login, type JwtToken, updateToken } from './auth';
-import Nextpage from './NextPage';
 import './App.css';
 
-function LoginPage() {
+function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -602,15 +601,6 @@ function LoginPage() {
         </Box>
       </Paper>
     </Box>
-  );
-}
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/Nextpage" element={<Nextpage />} />
-    </Routes>
   );
 }
 

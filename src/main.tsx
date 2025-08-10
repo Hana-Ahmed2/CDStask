@@ -1,17 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { CustomThemeProvider } from './contexts/ThemeContext';
 import App from './App.tsx';
 import Nextpage from './NextPage.tsx';
+import RouteGuard from './components/RouteGuard';
+import PublicRoute from './components/PublicRoute.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <CustomThemeProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/Nextpage" element={<Nextpage />} />
+          {/* Public route - only accessible when not authenticated */}
+          <Route 
+            path="/" 
+            element={
+              <PublicRoute>
+                <App />
+              </PublicRoute>
+            } 
+          />
+
+          {/* Protected route - only accessible when authenticated */}
+          <Route 
+            path="/Nextpage" 
+            element={
+              <RouteGuard>
+                <Nextpage />
+              </RouteGuard>
+            } 
+          />
+          
+          {/* Catch-all route - redirect to login if not found */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </CustomThemeProvider>
