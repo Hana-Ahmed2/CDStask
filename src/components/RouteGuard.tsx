@@ -11,10 +11,9 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) return false;
-      
       const parsedToken = JSON.parse(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      
+      const currentTime = Math.floor(Date.now() / 1000); //compare current epoch time with token expiration
+
       // Check if token exists and is not expired
       return parsedToken.expiresIn > currentTime;
     } catch (error) {

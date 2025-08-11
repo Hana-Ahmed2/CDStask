@@ -133,7 +133,7 @@ export default function Nextpage() {
       roleCode: 'user',
       businessUnitId: '',
       username: '',
-      status: 'active',
+      status: 'ACTIVE',
       firstName: '',
       lastName: '',
       department: '',
@@ -458,12 +458,12 @@ export default function Nextpage() {
                                 fontWeight: 500,
                                 fontSize: '0.75rem',
                                 textTransform: 'capitalize',
-                                ...(user.status === 'active' && {
+                                ...(user.status.toLowerCase() === 'active' && {
                                   backgroundColor: darkMode ? '#166534' : '#dcfce7',
                                   color: darkMode ? '#bbf7d0' : '#166534',
                                   border: darkMode ? '1px solid #22c55e' : '1px solid #bbf7d0'
                                 }),
-                                ...(user.status === 'inactive' && {
+                                ...(user.status.toLowerCase() === 'inactive' && {
                                   backgroundColor: darkMode ? '#991b1b' : '#fee2e2',
                                   color: darkMode ? '#fecaca' : '#991b1b',
                                   border: darkMode ? '1px solid #ef4444' : '1px solid #fecaca'
@@ -775,8 +775,8 @@ export default function Nextpage() {
                           }
                         }}
                       >
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
+                        <MenuItem value="ACTIVE">Active</MenuItem>
+                        <MenuItem value="INACTIVE">Inactive</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>

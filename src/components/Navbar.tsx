@@ -66,12 +66,15 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
     { text: 'Support', icon: <Support />, path: '/support' },
   ];
 
+  // el mobile drawer elly yezhar lama el screen ykoun sghayar
   const drawer = (
     <Box sx={{ width: 250, bgcolor: 'transparent' }}>
       <Box
         sx={{
           p: 2,
-          background: 'linear-gradient(135deg, #1e3a8a, #7c3aed)',
+          background: darkMode 
+            ? 'linear-gradient(135deg, #0f172a, #374151)' 
+            : 'linear-gradient(135deg, #1e3a8a, #7c3aed)',
           color: 'white',
           textAlign: 'center',
         }}
@@ -80,18 +83,23 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           CDS Menu
         </Typography>
       </Box>
+      {/* list bta3t el navigation items */}
       <List>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               sx={{
                 '&:hover': {
-                  bgcolor: 'rgba(124, 58, 237, 0.1)',
-                  color: '#7c3aed',
+                  bgcolor: darkMode 
+                    ? 'rgba(255, 255, 255, 0.1)' 
+                    : 'rgba(124, 58, 237, 0.1)',
+                  color: darkMode ? '#e5e7eb' : '#7c3aed',
                 },
               }}
             >
-              <ListItemIcon sx={{ color: '#7c3aed' }}>
+              <ListItemIcon sx={{ 
+                color: darkMode ? '#9ca3af' : '#7c3aed' 
+              }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText 
@@ -99,6 +107,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                 sx={{
                   '& .MuiListItemText-primary': {
                     fontWeight: 500,
+                    color: darkMode ? '#f3f4f6' : 'inherit',
                   }
                 }}
               />
@@ -110,26 +119,31 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   );
 
   const handleLogout = () => {
-    // Clear authentication data
     localStorage.removeItem('authToken');
     
-    // Close the menu
     handleProfileMenuClose();
     
-    // Redirect to login page
     navigate('/', { replace: true });
   };
 
   return (
     <>
+      {/* El App Bar  */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
-          background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c3aed 50%, #be185d 75%, #dc2626 100%)',
+          background: darkMode 
+            ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #374151 50%, #4b5563 75%, #6b7280 100%)'
+            : 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c3aed 50%, #be185d 75%, #dc2626 100%)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 4px 20px rgba(30, 58, 138, 0.3)',
+          borderBottom: darkMode 
+            ? '1px solid rgba(255, 255, 255, 0.2)' 
+            : '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: darkMode 
+            ? '0 4px 20px rgba(0, 0, 0, 0.5)' 
+            : '0 4px 20px rgba(30, 58, 138, 0.3)',
+          transition: 'all 0.3s ease',
         }}
       >
         <Toolbar sx={{ px: { xs: 2, md: 4 } }}>
@@ -156,10 +170,15 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                 width: 45,
                 height: 45,
                 borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.15)',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
+                background: darkMode 
+                  ? 'rgba(255, 255, 255, 0.1)' 
+                  : 'rgba(255, 255, 255, 0.15)',
+                border: darkMode 
+                  ? '2px solid rgba(255, 255, 255, 0.3)' 
+                  : '2px solid rgba(255, 255, 255, 0.2)',
                 mr: 2,
                 backdropFilter: 'blur(10px)',
+                transition: 'all 0.3s ease',
               }}
             >
               <Typography
@@ -204,10 +223,15 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                     position: 'relative',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: darkMode 
+                        ? 'rgba(255, 255, 255, 0.15)' 
+                        : 'rgba(255, 255, 255, 0.1)',
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 4px 15px rgba(255, 255, 255, 0.2)',
+                      boxShadow: darkMode 
+                        ? '0 4px 15px rgba(255, 255, 255, 0.1)' 
+                        : '0 4px 15px rgba(255, 255, 255, 0.2)',
                     },
+                    // underline animation
                     '&::after': {
                       content: '""',
                       position: 'absolute',
@@ -236,14 +260,23 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
               onClick={toggleDarkMode}
               sx={{
                 color: 'white',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
+                border: darkMode 
+                  ? '2px solid rgba(255, 255, 255, 0.3)' 
+                  : '2px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '50%',
                 width: 44,
                 height: 44,
                 transition: 'all 0.3s ease',
+                background: darkMode 
+                  ? 'rgba(255, 255, 255, 0.1)' 
+                  : 'transparent',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  background: darkMode 
+                    ? 'rgba(255, 255, 255, 0.2)' 
+                    : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: darkMode 
+                    ? 'rgba(255, 255, 255, 0.5)' 
+                    : 'rgba(255, 255, 255, 0.4)',
                   transform: 'scale(1.05) rotate(180deg)',
                 },
               }}
@@ -264,11 +297,17 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
               onClick={handleProfileMenuOpen}
               sx={{
                 color: 'white',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
+                border: darkMode 
+                  ? '2px solid rgba(255, 255, 255, 0.3)' 
+                  : '2px solid rgba(255, 255, 255, 0.2)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  background: darkMode 
+                    ? 'rgba(255, 255, 255, 0.15)' 
+                    : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: darkMode 
+                    ? 'rgba(255, 255, 255, 0.5)' 
+                    : 'rgba(255, 255, 255, 0.4)',
                   transform: 'scale(1.05)',
                 },
               }}
@@ -277,7 +316,9 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                 sx={{
                   width: 35,
                   height: 35,
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))',
+                  background: darkMode 
+                    ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1))' 
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))',
                   color: 'white',
                   fontSize: '1rem',
                   fontWeight: 600,
@@ -302,8 +343,13 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: 250,
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: darkMode 
+              ? 'rgba(15, 23, 42, 0.95)' 
+              : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
+            borderRight: darkMode 
+              ? '1px solid rgba(255, 255, 255, 0.1)' 
+              : '1px solid rgba(0, 0, 0, 0.1)',
           },
         }}
       >
@@ -326,22 +372,34 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
         onClose={handleProfileMenuClose}
         sx={{
           '& .MuiPaper-root': {
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: darkMode 
+              ? 'rgba(15, 23, 42, 0.95)' 
+              : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(124, 58, 237, 0.2)',
+            border: darkMode 
+              ? '1px solid rgba(255, 255, 255, 0.2)' 
+              : '1px solid rgba(124, 58, 237, 0.2)',
             borderRadius: 2,
             mt: 1,
             minWidth: 200,
-            boxShadow: '0 10px 30px rgba(30, 58, 138, 0.3)',
+            boxShadow: darkMode 
+              ? '0 10px 30px rgba(0, 0, 0, 0.5)' 
+              : '0 10px 30px rgba(30, 58, 138, 0.3)',
           },
         }}
       >
-        <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid rgba(124, 58, 237, 0.1)' }}>
+        <Box sx={{ 
+          px: 2, 
+          py: 1.5, 
+          borderBottom: darkMode 
+            ? '1px solid rgba(255, 255, 255, 0.1)' 
+            : '1px solid rgba(124, 58, 237, 0.1)' 
+        }}>
           <Typography
             variant="subtitle1"
             sx={{
               fontWeight: 600,
-              color: '#1e3a8a',
+              color: darkMode ? '#f3f4f6' : '#1e3a8a',
             }}
           >
             admin
@@ -353,12 +411,20 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           sx={{
             py: 1.5,
             '&:hover': {
-              background: 'rgba(124, 58, 237, 0.1)',
+              background: darkMode 
+                ? 'rgba(255, 255, 255, 0.1)' 
+                : 'rgba(124, 58, 237, 0.1)',
             },
           }}
         >
-          <AccountCircle sx={{ mr: 2, color: '#7c3aed' }} />
-          <Typography sx={{ fontWeight: 500 }}>Profile</Typography>
+          <AccountCircle sx={{ 
+            mr: 2, 
+            color: darkMode ? '#9ca3af' : '#7c3aed' 
+          }} />
+          <Typography sx={{ 
+            fontWeight: 500,
+            color: darkMode ? '#f3f4f6' : 'inherit' 
+          }}>Profile</Typography>
         </MenuItem>
         
         <MenuItem
@@ -366,18 +432,31 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           sx={{
             py: 1.5,
             '&:hover': {
-              background: 'rgba(124, 58, 237, 0.1)',
+              background: darkMode 
+                ? 'rgba(255, 255, 255, 0.1)' 
+                : 'rgba(124, 58, 237, 0.1)',
             },
           }}
         >
-          <Settings sx={{ mr: 2, color: '#7c3aed' }} />
-          <Typography sx={{ fontWeight: 500 }}>Settings</Typography>
+          <Settings sx={{ 
+            mr: 2, 
+            color: darkMode ? '#9ca3af' : '#7c3aed' 
+          }} />
+          <Typography sx={{ 
+            fontWeight: 500,
+            color: darkMode ? '#f3f4f6' : 'inherit' 
+          }}>Settings</Typography>
         </MenuItem>
         
-        <Divider sx={{ backgroundColor: 'rgba(124, 58, 237, 0.1)' }} />
+        {/* divider - line fasel bein el menu items */}
+        <Divider sx={{ 
+          backgroundColor: darkMode 
+            ? 'rgba(255, 255, 255, 0.1)' 
+            : 'rgba(124, 58, 237, 0.1)' 
+        }} />
         
         <MenuItem
-          onClick={handleLogout}  // Change this line
+          onClick={handleLogout}  
           sx={{
             py: 1.5,
             '&:hover': {

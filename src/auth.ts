@@ -18,8 +18,8 @@ export function login(req: Request): Promise<JwtToken> {
         resolve({
           token: "jwt-token",
           refreshToken: "refresh-token",
-          expiresIn: currentTime + 120,        // Current time + 2 minutes
-          refreshExpiresIn: currentTime + 86400 // Current time + 24 hours
+          expiresIn: currentTime + 120,        // Current time + 2 minutes,  kol 2 minutes hayetgaded
+          refreshExpiresIn: currentTime + 86400 // el refresh token hayefdal yehsal up to 24hrs 
         });
       } else {
         reject(new Error("Invalid username or password"));
