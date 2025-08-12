@@ -35,12 +35,12 @@ function App() {
         if (parsedToken.expiresIn > currentTime) {
           setToken(parsedToken);
           scheduleTokenRefresh(parsedToken);
-          navigate('/Nextpage'); 
+          navigate('/Home'); 
         } else {
           localStorage.removeItem('authToken'); 
         }
       } catch (error) {
-        console.error('Error parsing stored token:', error);
+        // console.error('Error parsing stored token:', error);
         localStorage.removeItem('authToken');
       }
     }
@@ -53,18 +53,18 @@ function App() {
     }
 
     const refreshDelay = (token.expiresIn - 60) * 1000; 
-    console.log('Scheduling token refresh in', refreshDelay / 1000, 'seconds');
+    // // console.log('Scheduling token refresh in', refreshDelay / 1000, 'seconds');
 
     tokenRefreshTimeout.current = setTimeout(async () => {
       try {
-        console.log('Triggering token refresh...');
+        // console.log('Triggering token refresh...');
         const newToken = await updateToken(token);
         console.log('Token refreshed:', newToken);
         setToken(newToken);
         localStorage.setItem('authToken', JSON.stringify(newToken));
         scheduleTokenRefresh(newToken);
       } catch (err) {
-        console.error('Failed to refresh token:', err);
+        // console.error('Failed to refresh token:', err);
         localStorage.removeItem('authToken');
         setToken(null);
       }
@@ -79,13 +79,13 @@ function App() {
 
     try {
       const result = await login({ username, password });
-      console.log('Logged in:', result);
+      // console.log('Logged in:', result);
       setToken(result);
       localStorage.setItem('authToken', JSON.stringify(result)); 
       scheduleTokenRefresh(result);
-      navigate('/Nextpage');
+      navigate('/Home');
     } catch (err) {
-      console.error('Login failed:', err);
+      // console.error('Login failed:', err);
       setError((err as Error).message);
     } finally {
       setLoading(false);

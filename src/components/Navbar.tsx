@@ -59,7 +59,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   };
 
   const navItems = [
-    { text: 'Home', icon: <Home />, path: '/NextPage.tsx' },
+    { text: 'Home', icon: <Home />, path: '/Home.tsx' },
     { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
     { text: 'Services', icon: <Business />, path: '/services' },
     { text: 'About', icon: <Info />, path: '/about' },
@@ -74,7 +74,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           p: 2,
           background: darkMode 
             ? 'linear-gradient(135deg, #0f172a, #374151)' 
-            : 'linear-gradient(135deg, #1e3a8a, #7c3aed)',
+            : 'linear-gradient(135deg, #1e3a8a, #7336dbff)',
           color: 'white',
           textAlign: 'center',
         }}
@@ -98,7 +98,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
               }}
             >
               <ListItemIcon sx={{ 
-                color: darkMode ? '#9ca3af' : '#7c3aed' 
+                color: darkMode ? '#9ca3af' : 'rgb(47, 58, 156)' 
               }}>
                 {item.icon}
               </ListItemIcon>
@@ -107,7 +107,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                 sx={{
                   '& .MuiListItemText-primary': {
                     fontWeight: 500,
-                    color: darkMode ? '#f3f4f6' : 'inherit',
+                    color: 'rgb(47, 58, 156)',
                   }
                 }}
               />
@@ -119,10 +119,14 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   );
 
   const handleLogout = () => {
+    const token = localStorage.getItem('authToken');
+    console.log("token ", token )
     localStorage.removeItem('authToken');
-    
+    const rtoken = localStorage.getItem('authToken');
+    console.log("refreshed token ", rtoken )
+
     handleProfileMenuClose();
-    
+    localStorage.removeItem('users');
     navigate('/', { replace: true });
   };
 

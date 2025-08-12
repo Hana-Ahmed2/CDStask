@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { CustomThemeProvider } from './contexts/ThemeContext';
 import App from './App.tsx';
-import Nextpage from './NextPage.tsx';
+import Home from './Home.tsx';
 import RouteGuard from './components/RouteGuard';
 import PublicRoute from './components/PublicRoute.tsx';
 
@@ -24,10 +24,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
           {/* Protected route - only accessible when authenticated */}
           <Route 
-            path="/Nextpage" 
+            path="/Home" 
             element={
               <RouteGuard>
-                <Nextpage />
+                <Home />
               </RouteGuard>
             } 
           />

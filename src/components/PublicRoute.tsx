@@ -24,7 +24,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
   // If user is already authenticated, redirect to dashboard
   if (isAuthenticated()) {
-    return <Navigate to="/Nextpage" replace />;
+    return <Navigate to="/Home" replace />;
   }
 
   // If not authenticated, render the public component (login page)
