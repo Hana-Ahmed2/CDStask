@@ -32,6 +32,8 @@ import {
   Info,
   DarkMode,
   LightMode,
+  Domain,
+  Security,
 } from '@mui/icons-material';
 
 interface NavbarProps {
@@ -58,8 +60,15 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setMobileOpen(false); // Close mobile drawer when navigating
+  };
+
   const navItems = [
-    { text: 'Home', icon: <Home />, path: '/Home.tsx' },
+    { text: 'Home', icon: <Home />, path: '/Home' },
+    { text: 'Business Units', icon: <Domain />, path: '/business-units' },
+    { text: 'Active Directory', icon: <Security />, path: '/active-directories' },
     { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
     { text: 'Services', icon: <Business />, path: '/services' },
     { text: 'About', icon: <Info />, path: '/about' },
@@ -88,6 +97,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
+              onClick={() => handleNavigation(item.path)}
               sx={{
                 '&:hover': {
                   bgcolor: darkMode 
@@ -216,6 +226,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
               {navItems.map((item) => (
                 <Button
                   key={item.text}
+                  onClick={() => handleNavigation(item.path)}
                   sx={{
                     color: 'white',
                     mx: 1,
@@ -452,7 +463,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
           }}>Settings</Typography>
         </MenuItem>
         
-        {/* divider - line fasel bein el menu items */}
+        {/* divider  */}
         <Divider sx={{ 
           backgroundColor: darkMode 
             ? 'rgba(255, 255, 255, 0.1)' 

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, IconButton } from '@mui/material';
 import { Visibility, Delete } from '@mui/icons-material';
-import { type User } from '../UserDialog/UserDialog'; 
+import { type User } from '../../types/User'; 
 
 interface ActionButtonsProps {
   user: User;
   darkMode: boolean;
   onViewDetails: (user: User) => void;
-  onDelete: (userId: number) => void;
+  onDelete: (userId: string) => void;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
