@@ -9,10 +9,10 @@ import {
   Paper, 
   Typography, 
   Box, 
-  Pagination, 
-  Button, 
-  TextField, 
-  MenuItem, 
+  Pagination,
+  Button,
+  TextField,
+  MenuItem,
   Menu
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -178,7 +178,7 @@ export default function ManagementTable<T>({
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)', overflow: 'hidden' }}>
       {/* Header Section */}
       <Box sx={{ 
         mb: 2, 
@@ -256,6 +256,7 @@ export default function ManagementTable<T>({
           overflow: 'auto',
           mb: 2,
           minHeight: 0,
+          maxHeight: 'calc(100vh - 300px)',
           '&::-webkit-scrollbar': {
             width: '8px',
             height: '8px',
@@ -278,30 +279,23 @@ export default function ManagementTable<T>({
           scrollbarColor: darkMode ? '#6b7280 #374151' : '#cbd5e1 #f1f5f9',
           '@media (max-width: 768px)': {
             overflowX: 'auto',
-          },
-          ...(itemsPerPage > 5 && {
-            maxHeight: 450,
-            overflowY: 'auto',
-          })
+          }
         }}
       >
         <Table sx={{ 
           minWidth: 650,
+          tableLayout: 'auto',
           '@media (max-width: 768px)': {
             minWidth: 300,
           }
         }} aria-label="management table">
           {/* Table Header */}
           <TableHead
-            sx={itemsPerPage > 5 ? {
+            sx={{
               position: 'sticky',
               top: 0,
               zIndex: 1,
               backgroundColor: darkMode ? '#1e293b' : '#ffffff',
-              '& .MuiTableCell-root': {
-                borderBottom: darkMode ? '2px solid #475569' : '2px solid #1e40af',
-              }
-            } : {
               '& .MuiTableCell-root': {
                 borderBottom: darkMode ? '2px solid #475569' : '2px solid #1e40af',
               }
@@ -361,7 +355,8 @@ export default function ManagementTable<T>({
         alignItems: 'center', 
         mt: 2,
         flexDirection: { xs: 'column', sm: 'row' },
-        gap: { xs: 2, sm: 0 }
+        gap: { xs: 2, sm: 0 },
+        flexShrink: 0
       }}>
         {/* Items per page selector */}
         <Box sx={{ 

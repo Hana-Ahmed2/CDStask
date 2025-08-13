@@ -109,7 +109,7 @@ export default function AddActiveDirectory() {
   };
 // beyrga3ny tany lel page lama akhalas
   const handleBack = () => {
-    navigate('ActiveDirectoriesPage');
+    navigate('/active-directories');
   };
 
   return (
@@ -139,7 +139,7 @@ export default function AddActiveDirectory() {
                 }
               }}
             >
-              Back to Users
+              Back to Active Directories
             </Button>
             <Typography
               variant="h4"

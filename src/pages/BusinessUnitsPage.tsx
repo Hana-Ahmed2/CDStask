@@ -203,7 +203,7 @@ export default function BusinessUnitsPage() {
           display: 'flex',
           flexDirection: 'column',
           py: 2,
-          overflow: 'visible',
+          overflow: 'hidden',
           backgroundColor: darkMode ? '#0f172a' : '#f8fafc' 
         }}
       >

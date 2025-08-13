@@ -4,10 +4,31 @@ import {
   Button, Typography, IconButton, TextField, Box,
   FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
-import { Edit, Save, Cancel, Add } from '@mui/icons-material';
-import type { User } from '../../types/User';
+import { Edit, Save, Cancel } from '@mui/icons-material';
 import type { BusinessUnit } from '../../types/BusinessUnit';
 import type { ActiveDirectory } from '../../types/ActiveDirectory';
+
+
+export interface User {
+  id: number;
+  name: string;
+  email: string; 
+  password: string;
+  provider: string;
+  roleCode: string;
+  businessUnitId: string;
+  username: string;
+  status: string;
+  firstName: string;
+  lastName: string;
+  department: string;
+  phoneNumber: string;
+  activeDirectoryId: string;
+  createdAt: string;
+  modifiedAt: string;
+  createdById: string;
+  modifiedById: string;
+}
 
 interface UserDialogProps {
   open: boolean;
@@ -90,8 +111,9 @@ const UserDialog: React.FC<UserDialogProps> = ({
           alignItems: 'center',
           backgroundColor: darkMode ? '#0f172a' : '#f8fafc',
           color: darkMode ? '#f1f5f9' : '#1e293b',
-          padding: '15px 24px',
+          padding: '16px 24px',
           margin: 0,
+          borderBottom: darkMode ? '1px solid #374151' : '1px solid #e2e8f0',
         }}>
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
           {isCreating ? 'Add New Member' : isEditing ? 'Edit Member Details' : 'Member Details'}
@@ -115,9 +137,13 @@ const UserDialog: React.FC<UserDialogProps> = ({
           </IconButton>
         )}
       </DialogTitle>
-      <br></br>
+      
       {/* el content beta3 el dialog - kol el form fields */}
-      <DialogContent sx={{ p: 2, backgroundColor: darkMode ? '#1e293b' : '#ffffff'}}>
+      <DialogContent sx={{ 
+        padding: '24px', 
+        backgroundColor: darkMode ? '#1e293b' : '#ffffff',
+        paddingTop: '24px !important'
+      }}>
         {editedUser && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {/* Username field */}
@@ -433,38 +459,28 @@ const UserDialog: React.FC<UserDialogProps> = ({
                       },
                     }}
                   >
-                    <MenuItem value="">
-                      <em>Select Business Unit</em>
-                    </MenuItem>
+                    <MenuItem value="">Select Business Unit</MenuItem>
                     {businessUnits.map((bu) => (
                       <MenuItem key={bu.id} value={bu.id}>
-                        {bu.name} ({bu.code})
+                        {bu.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
                 {(isEditing || isCreating) && (
-                  <Button
+                  <Button 
                     onClick={onAddBusinessUnit}
+                    variant="outlined"
                     size="small"
-                    startIcon={<Add />}
                     sx={{
-                      borderRadius: '8px',
-                      padding: '6px 12px',
-                      background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c3aed 50%, #be185d 75%, #dc2626 100%)',
-                      color: '#ffffff',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      fontSize: '0.75rem',
                       minWidth: 'auto',
-                      boxShadow: '0 2px 8px rgba(30, 58, 138, 0.3)',
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap',
+                      padding: '8px 12px',
+                      borderColor: darkMode ? '#3b82f6' : '#2563eb',
+                      color: darkMode ? '#3b82f6' : '#2563eb',
                       '&:hover': {
-                        background: 'linear-gradient(135deg, #1e40af 0%, #4338ca 25%, #8b5cf6 50%, #db2777 75%, #ef4444 100%)',
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0 4px 12px rgba(30, 58, 138, 0.4)',
-                      },
+                        borderColor: darkMode ? '#1d4ed8' : '#1e40af',
+                        backgroundColor: darkMode ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 99, 235, 0.1)',
+                      }
                     }}
                   >
                     Add BU
@@ -529,38 +545,28 @@ const UserDialog: React.FC<UserDialogProps> = ({
                       },
                     }}
                   >
-                    <MenuItem value="">
-                      <em>Select Active Directory</em>
-                    </MenuItem>
+                    <MenuItem value="">Select Active Directory</MenuItem>
                     {activeDirectories.map((ad) => (
-                      <MenuItem key={ad.id} value={ad.id.toString()}>
+                      <MenuItem key={ad.id} value={ad.id}>
                         {ad.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
                 {(isEditing || isCreating) && (
-                  <Button
+                  <Button 
                     onClick={onAddActiveDirectory}
+                    variant="outlined"
                     size="small"
-                    startIcon={<Add />}
                     sx={{
-                      borderRadius: '8px',
-                      padding: '6px 12px',
-                      background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c3aed 50%, #be185d 75%, #dc2626 100%)',
-                      color: '#ffffff',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      fontSize: '0.75rem',
                       minWidth: 'auto',
-                      boxShadow: '0 2px 8px rgba(30, 58, 138, 0.3)',
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap',
+                      padding: '8px 12px',
+                      borderColor: darkMode ? '#3b82f6' : '#2563eb',
+                      color: darkMode ? '#3b82f6' : '#2563eb',
                       '&:hover': {
-                        background: 'linear-gradient(135deg, #1e40af 0%, #4338ca 25%, #8b5cf6 50%, #db2777 75%, #ef4444 100%)',
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0 4px 12px rgba(30, 58, 138, 0.4)',
-                      },
+                        borderColor: darkMode ? '#1d4ed8' : '#1e40af',
+                        backgroundColor: darkMode ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 99, 235, 0.1)',
+                      }
                     }}
                   >
                     Add AD

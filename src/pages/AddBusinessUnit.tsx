@@ -110,7 +110,7 @@ export default function AddBusinessUnit() {
   };
 
   const handleBack = () => {
-    navigate('/BusinessUnitsPage');
+    navigate('/business-units');
   };
 
   return (
@@ -140,7 +140,7 @@ export default function AddBusinessUnit() {
                 }
               }}
             >
-              Back to Users
+              Back to Business Units
             </Button>
             <Typography
               variant="h4"

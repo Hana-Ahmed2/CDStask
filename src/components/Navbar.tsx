@@ -117,7 +117,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                 sx={{
                   '& .MuiListItemText-primary': {
                     fontWeight: 500,
-                    color: 'rgb(47, 58, 156)',
+                    color: darkMode ? 'rgb(156, 163, 175)' : 'rgb(47, 58, 156)',
                   }
                 }}
               />

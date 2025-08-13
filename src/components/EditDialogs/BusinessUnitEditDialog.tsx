@@ -143,16 +143,18 @@ export default function BusinessUnitEditDialog({
           fontWeight: 600,
           textAlign: 'center',
           fontSize: '1.1rem',
-          padding: '16px 20px',
-          margin:0,
+          padding: '16px 24px',
+          margin: 0,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         }}
       >
         Edit Business Unit
       </DialogTitle>
-<br></br>
+      
       <DialogContent sx={{ 
         padding: '24px', 
         backgroundColor: darkMode ? '#374151' : '#ffffff',
+        paddingTop: '24px !important',
         maxHeight: 'calc(100vh - 200px)',
         overflowY: 'auto',
       }}>

@@ -243,17 +243,9 @@ export default function Home() {
 
   // function 3ashan n save el users fel localStorage
 
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  };
-
   const handleCreateUser = () => {
     const newUser: User = {
-      id: generateUUID(), // generate UUID instead of numeric ID
+      id: Math.max(...users.map(u => u.id), 0) + 1, // geeb akbar ID w zeedo 1
       name: '',
       email: '',
       password: '',
@@ -317,7 +309,7 @@ export default function Home() {
     }
   };
 
-  const handleDelete = (userId: string) => {
+  const handleDelete = (userId: number) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       const updatedUsers = users.filter(user => user.id !== userId);
       
