@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import {
   AppBar,
   Toolbar,
@@ -24,16 +25,13 @@ import {
   AccountCircle,
   Settings,
   Logout,
-  Dashboard,
   Menu as MenuIcon,
   Home,
-  Business,
-  Support,
-  Info,
   DarkMode,
   LightMode,
   Domain,
   Security,
+  People,
 } from '@mui/icons-material';
 
 interface NavbarProps {
@@ -47,6 +45,10 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
+  
+  // Debug: log user data
+  console.log('Navbar - Current user:', user);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -67,12 +69,9 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
 
   const navItems = [
     { text: 'Home', icon: <Home />, path: '/Home' },
+    { text: 'Users', icon: <People />, path: '/users' },
     { text: 'Business Units', icon: <Domain />, path: '/business-units' },
     { text: 'Active Directory', icon: <Security />, path: '/active-directories' },
-    { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
-    { text: 'Services', icon: <Business />, path: '/services' },
-    { text: 'About', icon: <Info />, path: '/about' },
-    { text: 'Support', icon: <Support />, path: '/support' },
   ];
 
   // el mobile drawer elly yezhar lama el screen ykoun sghayar
@@ -129,15 +128,9 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
   );
 
   const handleLogout = () => {
-    const token = localStorage.getItem('authToken');
-    console.log("token ", token )
-    localStorage.removeItem('authToken');
-    const rtoken = localStorage.getItem('authToken');
-    console.log("refreshed token ", rtoken )
-
+    console.log("Logging out...");
     handleProfileMenuClose();
-    localStorage.removeItem('users');
-    navigate('/', { replace: true });
+    logout(); // Use the logout function from AuthContext
   };
 
   return (
@@ -222,44 +215,64 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
 
           {/* Desktop Navigation */}
           {!isMobile && (
-            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', mx: 4 }}>
-              {navItems.map((item) => (
+            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mr: 2 }}>
+              {navItems.map((item, index) => (
                 <Button
                   key={item.text}
                   onClick={() => handleNavigation(item.path)}
                   sx={{
                     color: 'white',
-                    mx: 1,
-                    px: 2,
+                    mx: 0.5,
+                    px: 2.5,
                     py: 1,
                     borderRadius: 2,
                     fontWeight: 500,
                     textTransform: 'none',
                     position: 'relative',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transitionDelay: `${index * 0.05}s`,
+                    opacity: 0.9,
                     '&:hover': {
                       background: darkMode 
                         ? 'rgba(255, 255, 255, 0.15)' 
                         : 'rgba(255, 255, 255, 0.1)',
-                      transform: 'translateY(-2px)',
+                      transform: 'translateY(-3px) scale(1.02)',
                       boxShadow: darkMode 
-                        ? '0 4px 15px rgba(255, 255, 255, 0.1)' 
-                        : '0 4px 15px rgba(255, 255, 255, 0.2)',
+                        ? '0 6px 20px rgba(255, 255, 255, 0.15)' 
+                        : '0 6px 20px rgba(255, 255, 255, 0.25)',
+                      opacity: 1,
                     },
                     // underline animation
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      left: '50%',
+                      width: 0,
+                      height: '3px',
+                      background: 'linear-gradient(90deg, transparent, white, transparent)',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transform: 'translateX(-50%)',
+                      borderRadius: '2px',
+                    },
+                    '&:hover::before': {
+                      width: '90%',
+                    },
+                    // glow effect
                     '&::after': {
                       content: '""',
                       position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
                       bottom: 0,
-                      left: '50%',
-                      width: 0,
-                      height: '2px',
-                      background: 'white',
-                      transition: 'all 0.3s ease',
-                      transform: 'translateX(-50%)',
+                      borderRadius: 2,
+                      background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)',
+                      opacity: 0,
+                      transition: 'opacity 0.4s ease',
                     },
                     '&:hover::after': {
-                      width: '80%',
+                      opacity: 1,
                     },
                   }}
                 >
@@ -339,7 +352,7 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
                   fontWeight: 600,
                 }}
               >
-                U
+                {user?.username?.charAt(0).toUpperCase() || 'G'}
               </Avatar>
             </IconButton>
           </Box>
@@ -417,8 +430,20 @@ const Navbar = ({ darkMode = false, toggleDarkMode }: NavbarProps) => {
               color: darkMode ? '#f3f4f6' : '#1e3a8a',
             }}
           >
-            admin
+            {user?.username || 'Guest'}
           </Typography>
+          {user?.role && (
+            <Typography
+              variant="caption"
+              sx={{
+                color: darkMode ? '#9ca3af' : '#64748b',
+                display: 'block',
+                textTransform: 'capitalize'
+              }}
+            >
+              {user.role}
+            </Typography>
+          )}
         </Box>
         
         <MenuItem

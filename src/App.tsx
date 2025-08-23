@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
 import {
   Box,
   TextField,
@@ -13,7 +14,7 @@ import {
   Link,
 } from '@mui/material';
 import { Visibility, VisibilityOff, Person, Lock } from '@mui/icons-material';
-import { login, type JwtToken, updateToken } from './auth';
+import { login } from './auth';
 import './App.css';
 
 function App() {
@@ -21,71 +22,21 @@ function App() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<JwtToken | null>(null);
-  const [showPassword, setShowPassword] = useState(false); // 3ashan nekhalih yeshoof el password
-  const tokenRefreshTimeout = useRef<number | null>(null); // 3ashan negdad el token
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      try {
-        const parsedToken: JwtToken = JSON.parse(storedToken);
-        const currentTime = Math.floor(Date.now() / 1000);
-        if (parsedToken.expiresIn > currentTime) {
-          setToken(parsedToken);
-          scheduleTokenRefresh(parsedToken);
-          navigate('/Home'); 
-        } else {
-          localStorage.removeItem('authToken'); 
-        }
-      } catch (error) {
-        // console.error('Error parsing stored token:', error);
-        localStorage.removeItem('authToken');
-      }
-    }
-  }, [navigate]);
-
-  // function 3ashan tegdad el token abl ma ykheles
-  const scheduleTokenRefresh = (token: JwtToken) => {
-    if (tokenRefreshTimeout.current) {
-      clearTimeout(tokenRefreshTimeout.current);
-    }
-
-    const refreshDelay = (token.expiresIn - 60) * 1000; 
-    // // console.log('Scheduling token refresh in', refreshDelay / 1000, 'seconds');
-
-    tokenRefreshTimeout.current = setTimeout(async () => {
-      try {
-        // console.log('Triggering token refresh...');
-        const newToken = await updateToken(token);
-        console.log('Token refreshed:', newToken);
-        setToken(newToken);
-        localStorage.setItem('authToken', JSON.stringify(newToken));
-        scheduleTokenRefresh(newToken);
-      } catch (err) {
-        // console.error('Failed to refresh token:', err);
-        localStorage.removeItem('authToken');
-        setToken(null);
-      }
-    }, refreshDelay);
-  };
+  const { login: authLogin, token } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setToken(null);
 
     try {
       const result = await login({ username, password });
-      // console.log('Logged in:', result);
-      setToken(result);
-      localStorage.setItem('authToken', JSON.stringify(result)); 
-      scheduleTokenRefresh(result);
+      // Use the auth context login function which handles token refresh scheduling
+      authLogin(result);
       navigate('/Home');
     } catch (err) {
-      // console.error('Login failed:', err);
       setError((err as Error).message);
     } finally {
       setLoading(false);

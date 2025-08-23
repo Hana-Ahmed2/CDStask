@@ -217,11 +217,11 @@ export default function ActiveDirectoriesPage() {
       <Container 
         maxWidth="xl" 
         sx={{ 
-          height: 'calc(100vh - 64px)', 
+          maxHeight: 'calc(100vh - 64px)', 
           display: 'flex',
           flexDirection: 'column',
           py: 2,
-          overflow: 'visible',
+          overflow: 'auto',
           backgroundColor: darkMode ? '#0f172a' : '#f8fafc' 
         }}
       >

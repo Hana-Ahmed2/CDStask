@@ -1,29 +1,16 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface PublicRouteProps {
   children: React.ReactNode;
 }
 
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  // Check if user is authenticated
-  const isAuthenticated = (): boolean => {
-    try {
-      const token = localStorage.getItem('authToken');
-      if (!token) return false;
-      
-      const parsedToken = JSON.parse(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      
-      return parsedToken.expiresIn > currentTime;
-    } catch (error) {
-      console.error('Error checking authentication:', error);
-      return false;
-    }
-  };
+  const { isAuthenticated } = useAuth();
 
   // If user is already authenticated, redirect to dashboard
-  if (isAuthenticated()) {
+  if (isAuthenticated) {
     return <Navigate to="/Home" replace />;
   }
 

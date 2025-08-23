@@ -31,6 +31,14 @@ export default function BusinessUnitsPage() {
     severity: 'success' as 'success' | 'error' 
   });
 
+  // Confirmation dialog state
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: '',
+    message: '',
+    onConfirm: () => {}
+  });
+
   // Column definitions for business units table
   const businessUnitColumns: ColumnDefinition<BusinessUnit>[] = [
     {
@@ -178,18 +186,27 @@ export default function BusinessUnitsPage() {
   };
 
   const handleDelete = (unitId: string) => {
-    if (window.confirm('Are you sure you want to delete this business unit?')) {
-      const updatedUnits = businessUnits.filter(unit => unit.id !== unitId);
-      
-      setBusinessUnits(updatedUnits);
-      localStorage.setItem('businessUnits', JSON.stringify(updatedUnits));
-      
-      setSnackbar({ 
-        open: true, 
-        message: 'Business unit deleted successfully!', 
-        severity: 'success' 
-      });
-    }
+    const unitToDelete = businessUnits.find(unit => unit.id === unitId);
+    
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Business Unit',
+      message: `Are you sure you want to delete business unit "${unitToDelete?.name || 'Unknown'}"? This action cannot be undone.`,
+      onConfirm: () => {
+        const updatedUnits = businessUnits.filter(unit => unit.id !== unitId);
+        
+        setBusinessUnits(updatedUnits);
+        localStorage.setItem('businessUnits', JSON.stringify(updatedUnits));
+        
+        setSnackbar({ 
+          open: true, 
+          message: 'Business unit deleted successfully!', 
+          severity: 'success' 
+        });
+        
+        setConfirmDialog({ ...confirmDialog, open: false });
+      }
+    });
   };
 
   return (
@@ -199,11 +216,11 @@ export default function BusinessUnitsPage() {
       <Container 
         maxWidth="xl" 
         sx={{ 
-          height: 'calc(100vh - 64px)', 
+          maxHeight: 'calc(100vh - 64px)', 
           display: 'flex',
           flexDirection: 'column',
           py: 2,
-          overflow: 'hidden',
+          overflow: 'auto',
           backgroundColor: darkMode ? '#0f172a' : '#f8fafc' 
         }}
       >

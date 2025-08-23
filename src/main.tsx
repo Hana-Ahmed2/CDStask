@@ -2,8 +2,10 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { CustomThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
 import App from './App.tsx';
 import Home from './Home.tsx';
+import UsersPage from './pages/UsersPage.tsx';
 import AddBusinessUnit from './pages/AddBusinessUnit.tsx';
 import AddActiveDirectory from './pages/AddActiveDirectory.tsx';
 import BusinessUnitsPage from './pages/BusinessUnitsPage.tsx';
@@ -15,16 +17,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <CustomThemeProvider>
       <BrowserRouter>
-        <Routes>
-          {/* Public route - only accessible when not authenticated */}
-          <Route 
-            path="/" 
-            element={
-              <PublicRoute>
-                <App />
-              </PublicRoute>
-            } 
-          />
+        <AuthProvider>
+          <Routes>
+            {/* Public route - only accessible when not authenticated */}
+            <Route 
+              path="/" 
+              element={
+                <PublicRoute>
+                  <App />
+                </PublicRoute>
+              } 
+            />
 
           {/* Protected routes - only accessible when authenticated */}
           <Route 
@@ -32,6 +35,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             element={
               <RouteGuard>
                 <Home />
+              </RouteGuard>
+            } 
+          />
+          
+          <Route 
+            path="/users" 
+            element={
+              <RouteGuard>
+                <UsersPage />
               </RouteGuard>
             } 
           />
@@ -75,6 +87,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           {/* Catch-all route - redirect to login if not found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </CustomThemeProvider>
   </StrictMode>
